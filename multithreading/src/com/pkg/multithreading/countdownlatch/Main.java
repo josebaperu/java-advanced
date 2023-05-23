@@ -9,12 +9,11 @@ import java.util.stream.IntStream;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(3);
-        ExecutorService service = Executors.newFixedThreadPool(3);
-        IntStream it = IntStream.range(0, 3);
-        it.forEach(e -> service.submit(new Processor(latch)));
-        System.out.println("before "+LocalTime.now());
+        ExecutorService service = Executors.newCachedThreadPool();
+        IntStream.range(0, 3).forEach(e -> service.submit(new Processor(latch)));
+        System.out.println("before await "+LocalTime.now());
         latch.await();
-        System.out.println("after "+LocalTime.now());
+        System.out.println("after await "+LocalTime.now());
         service.shutdown();
     }
 }
@@ -26,8 +25,9 @@ class Processor implements  Runnable {
     @Override
     public void run() {
         try {
+            System.out.println("Run before sleep: " + Thread.currentThread().getName());
             Thread.sleep(2000);
-            System.out.println("Run : " + Thread.currentThread().getName());
+            System.out.println("Run after sleep : " + Thread.currentThread().getName());
         }catch (Exception ex) {
             Thread.currentThread().interrupt();
             ex.printStackTrace();
