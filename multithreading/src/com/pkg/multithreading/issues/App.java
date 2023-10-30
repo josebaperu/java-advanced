@@ -10,28 +10,31 @@ public class App  {
     }
     //AtomicInteger atomicInteger = new AtomicInteger(0);
     int count = 0;
+    private  void increment(){ //synchronized
+        count++;
+    }
     public void doRun() throws InterruptedException{
         Thread t1 = new Thread(() -> {
             for(int i = 0; i < 200; i++){
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 //atomicInteger.getAndAdd(1);
-                count++;
+                increment();
             }
 
         });
         Thread t2 = new Thread(() -> {
             for(int i = 0; i < 200; i++){
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 //atomicInteger.getAndAdd(1);
-                count++;
+                increment();
 
             }
         });
